@@ -6,14 +6,17 @@ from .serializers import ChessEventSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.permissions import IsAdminUser
 from django.shortcuts import get_object_or_404
+from .models import Tag
+from .serializers import TagSerializer
+
 
 @api_view(['GET', 'POST'])
 def chess_event_list(request):
     if request.method == 'GET':
         if request.user.is_staff:
-            events = ChessEvent.objects.all().order_by('-date')
+            events = ChessEvent.objects.all().order_by('-created_at')
         else:
-            events = ChessEvent.objects.filter(status='approved').order_by('-date')
+            events = ChessEvent.objects.filter(status='approved').order_by('-created_at')
         serializer = ChessEventSerializer(events, many=True)
         return Response(serializer.data)
 
@@ -48,3 +51,10 @@ def chess_event_detail(request, pk):
             event.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response({'detail': 'Not authorized to delete this event'}, status=status.HTTP_403_FORBIDDEN)
+
+@api_view(['GET'])
+def get_tags(request):
+    if request.method == 'GET':
+        tags = Tag.objects.all()
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data)

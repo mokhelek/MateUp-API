@@ -12,5 +12,6 @@ urlpatterns = [
     path('events/', views.chess_event_list, name='chess_event_list'),
     path('events/<int:pk>/', views.chess_event_detail, name='chess_event_detail'),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('tags/', views.get_tags, name='get_tags'),
 ]
